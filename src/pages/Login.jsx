@@ -88,8 +88,8 @@ function Login() {
               onChange={handleEmail}
               value={loginInfo.email}
               type="email"
-              className={`w-full py-[26.6px] px-[52px] text-[18px] font-secondary font-semibold border-2 border-secondary/30  text-black/80 rounded-[8.6px] ${
-                loginErrors.emailError && "rounded-b-none border-red-500"
+              className={`w-full py-[26.6px] px-[52px] text-[18px] font-secondary font-semibold border-2   text-black/80 rounded-[8.6px] ${
+                loginErrors.emailError ? "rounded-b-none border-red-400" : "border-secondary/30"
               } focus:outline-0 `}
               placeholder="Enter your email address"
             />
@@ -106,8 +106,8 @@ function Login() {
               onChange={handlePassword}
               value={loginInfo.password}
               type={showPass ? "text" : "password"}
-              className={`w-full py-[26.6px] px-[52px] text-[18px] font-secondary font-semibold border-2 text-black/80 border-secondary/30 rounded-[8.6px] ${
-                loginErrors.passwordError && "rounded-b-none border-red-500"
+              className={`w-full py-[26.6px] px-[52px] text-[18px] font-secondary font-semibold border-2 text-black/80  rounded-[8.6px] ${
+                loginErrors.passwordError ? "rounded-b-none border-red-400" : "border-secondary/30"
               } focus:outline-0 `}
               placeholder="Enter password"
             />
@@ -132,7 +132,7 @@ function Login() {
               onClick={handleLogin}
               className="bg-primary rounded-[86px] w-full font-primary font-semibold text-[20.6px] text-white px-[135px] py-[20px] shadow-[0px_6px_8px_-2px_rgba(0,_0,_0,_0.4)]"
             >
-              Sign In
+              Login
             </button>
             <p className="font-sans text-[13.4px] mt-[35px] text-center">
               Already have an account ?{" "}

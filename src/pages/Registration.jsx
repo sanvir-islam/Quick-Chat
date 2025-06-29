@@ -3,10 +3,13 @@ import registration from "../assets/registration.png";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
 import { Link, useNavigate } from "react-router";
-import signUpUser from "../firebase/authService";
+import { Bounce, toast, ToastContainer } from "react-toastify";
+import { emailVerification, signUpUser } from "../firebase/authService";
+import { CircleLoader } from "react-spinners";
 
 function Registration() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [registrationInfo, setRegistrationInfo] = useState({
     email: "",
     fullName: "",
@@ -66,16 +69,17 @@ function Registration() {
       fullNameError,
       passwordError,
     });
+
     return !emailError && !fullNameError && !passwordError;
   };
 
   const handleRegistration = async () => {
     const isValid = handleRegistrationValidation();
-
     if (isValid) {
+      setIsLoading(true);
       try {
-        const user = await signUpUser(registrationInfo.email, registrationInfo.password);
-        console.log("Signed up successfully:", user);
+        await signUpUser(registrationInfo.email, registrationInfo.password);
+        await emailVerification();
 
         // clear input fields
         setRegistrationInfo({
@@ -84,18 +88,37 @@ function Registration() {
           password: "",
         });
 
-        console.log("Registration  Successful");
-        navigate("/login");
+        toast.success("Successfully signed up! ");
+
+        setTimeout(() => {
+          navigate("/login");
+        }, 3000);
       } catch (error) {
         console.log("Registration Failed: " + error);
+      } finally {
+        setIsLoading(false);
       }
     } else {
-      console.log("Fix your inpouts errors");
+      console.log("Fix your inpout errors");
     }
   };
 
   return (
     <div className="flex items-center">
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
+      ;
       <div className="w-[52%] ml-[20%] align-center ">
         <h2 className="text-secondary text-[35px] font-bold font-secondary">Get started with easily register</h2>
         <p className="text-[20px] text-primary/50 mt-[13px]">Free register and you can enjoy it</p>
@@ -106,8 +129,8 @@ function Registration() {
               onChange={handleEmail}
               value={registrationInfo.email}
               type="email"
-              className={`w-full py-[26.6px] px-[52px] text-[18px] font-secondary font-semibold border-2 border-secondary/30  text-black/80 rounded-[8.6px] ${
-                registrationErrors.emailError && "rounded-b-none border-red-500"
+              className={`w-full py-[26.6px] px-[52px] text-[18px] font-secondary font-semibold border-2   text-black/80 rounded-[8.6px] ${
+                registrationErrors.emailError ? "rounded-b-none border-red-400" : "border-secondary/30"
               } focus:outline-0 `}
               placeholder="Enter your email address"
             />
@@ -123,8 +146,8 @@ function Registration() {
               onChange={handleFullName}
               value={registrationInfo.fullName}
               type="text"
-              className={`w-full py-[26.6px] px-[52px] text-[18px] font-secondary font-semibold border-2 border-secondary/30  text-black/80 rounded-[8.6px] ${
-                registrationErrors.fullNameError && "rounded-b-none border-red-500"
+              className={`w-full py-[26.6px] px-[52px] text-[18px] font-secondary font-semibold border-2   text-black/80 rounded-[8.6px] ${
+                registrationErrors.fullNameError ? "rounded-b-none border-red-400" : "border-secondary/30"
               } focus:outline-0 `}
               placeholder="Enter your full name"
             />
@@ -140,8 +163,8 @@ function Registration() {
               onChange={handlePassword}
               value={registrationInfo.password}
               type={showPass ? "text" : "password"}
-              className={`w-full py-[26.6px] px-[52px] text-[18px] font-secondary font-semibold border-2 text-black/80 border-secondary/30 rounded-[8.6px] ${
-                registrationErrors.passwordError && "rounded-b-none border-red-500"
+              className={`w-full py-[26.6px] px-[52px] text-[18px] font-secondary font-semibold border-2 text-black/80  rounded-[8.6px] ${
+                registrationErrors.passwordError ? "rounded-b-none border-red-400" : "border-secondary/30"
               } focus:outline-0 `}
               placeholder="Enter password"
             />
@@ -164,9 +187,9 @@ function Registration() {
           <div className="w-[400px] mt-[52px]">
             <button
               onClick={handleRegistration}
-              className="bg-primary rounded-[86px] w-full font-primary font-semibold text-[20.6px] text-white px-[135px] py-[20px] shadow-[0px_6px_8px_-2px_rgba(0,_0,_0,_0.4)]"
+              className="relative bg-primary rounded-[86px] w-full font-primary font-semibold text-[20.6px] text-white px-[135px] py-[20px] shadow-[0px_6px_8px_-2px_rgba(0,_0,_0,_0.4)] flex justify-center items-center"
             >
-              Sign Up
+              {isLoading ? <CircleLoader color="#ffffff" size={30} /> : "Sign Up"}
             </button>
             <p className="font-sans text-[13.4px] mt-[35px] text-center">
               Already have an account ?{" "}
@@ -177,7 +200,6 @@ function Registration() {
           </div>
         </div>
       </div>
-
       <div className="w-[48%] h-screen">
         <img src={registration} className="w-full h-full object-cover " alt="#registration" />
       </div>
