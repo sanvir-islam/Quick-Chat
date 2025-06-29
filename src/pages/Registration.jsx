@@ -188,6 +188,9 @@ function Registration() {
             <button
               onClick={handleRegistration}
               className="relative bg-primary rounded-[86px] w-full font-primary font-semibold text-[20.6px] text-white px-[135px] py-[20px] shadow-[0px_6px_8px_-2px_rgba(0,_0,_0,_0.4)] flex justify-center items-center"
+              style={{
+                background: !isLoading ? "radial-gradient(circle,rgba(91, 54, 245, 1) -60%, rgba(0, 0, 0, 1) 30%)" : "",
+              }}
             >
               {isLoading ? <CircleLoader color="#ffffff" size={30} /> : "Sign Up"}
             </button>
