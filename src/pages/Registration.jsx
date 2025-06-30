@@ -88,18 +88,18 @@ function Registration() {
           password: "",
         });
 
-        toast.success("Successfully signed up! ");
+        toast.success("Successfully signed up!");
 
         setTimeout(() => {
           navigate("/login");
         }, 3000);
       } catch (error) {
-        console.log("Registration Failed: " + error);
+        toast.error(error.message);
       } finally {
         setIsLoading(false);
       }
     } else {
-      console.log("Fix your inpout errors");
+      toast.error("Fix your inpout errors");
     }
   };
 
@@ -118,7 +118,6 @@ function Registration() {
         theme="light"
         transition={Bounce}
       />
-      ;
       <div className="w-[52%] ml-[20%] align-center ">
         <h2 className="text-secondary text-[35px] font-bold font-secondary">Get started with easily register</h2>
         <p className="text-[20px] text-primary/50 mt-[13px]">Free register and you can enjoy it</p>
@@ -189,7 +188,7 @@ function Registration() {
               onClick={handleRegistration}
               className="relative bg-primary rounded-[86px] w-full font-primary font-semibold text-[20.6px] text-white px-[135px] py-[20px] shadow-[0px_6px_8px_-2px_rgba(0,_0,_0,_0.4)] flex justify-center items-center"
               style={{
-                background: !isLoading ? "radial-gradient(circle,rgba(91, 54, 245, 1) -60%, rgba(0, 0, 0, 1) 30%)" : "",
+                background: !isLoading ? "radial-gradient(circle, rgb(91, 54, 245) -75%, rgb(0, 0, 0) 50%)" : "",
               }}
             >
               {isLoading ? <CircleLoader color="#ffffff" size={30} /> : "Sign Up"}

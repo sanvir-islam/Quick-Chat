@@ -2,10 +2,16 @@ import { useState } from "react";
 import login from "../assets/Login.png";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { FcGoogle } from "react-icons/fc";
+import { CircleLoader } from "react-spinners";
+import { signInUser } from "../firebase/authService";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 function Login() {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+
   const [loginInfo, setLoginInfo] = useState({
     email: "",
     password: "",
@@ -56,16 +62,27 @@ function Login() {
     return !emailError && !passwordError;
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     const isValid = handleLoginValidation();
 
     if (isValid) {
-      // If all inputs are valid, clear the fields
-      setLoginInfo({
-        email: "",
-        password: "",
-      });
-      console.log("Login  Successful");
+      setIsLoading(true);
+      try {
+        await signInUser(loginInfo.email, loginInfo.password);
+        //clear the fields
+        setLoginInfo({
+          email: "",
+          password: "",
+        });
+        toast.success("Successfully logged in!");
+        setTimeout(() => {
+          navigate("/home");
+        }, 1500);
+      } catch (error) {
+        toast.error(error.message);
+      } finally {
+        setIsLoading(false);
+      }
     } else {
       console.log("Login Failed: Some fields are invalid");
     }
@@ -73,6 +90,19 @@ function Login() {
 
   return (
     <div className="flex items-center">
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
       <div className="w-[52%] ml-[20%] align-center ">
         <h2 className="text-secondary text-[35px] font-bold font-sans">Login to your account!</h2>
         <div className="flex items-center ml-[3px] py-[23px] pr-[40px] pl-[30px] w-[240px] border-2 border-black/20 cursor-pointer mt-[30px] rounded-[8.6px]">
@@ -104,6 +134,7 @@ function Login() {
           <div className=" w-[400px] relative mt-[45px] ml-[3px]">
             <input
               onChange={handlePassword}
+              onKeyDown={(e) => (e.key === "Enter" ? handleLogin() : "")}
               value={loginInfo.password}
               type={showPass ? "text" : "password"}
               className={`w-full py-[26.6px] px-[52px] text-[18px] font-secondary font-semibold border-2 text-black/80  rounded-[8.6px] ${
@@ -130,9 +161,12 @@ function Login() {
           <div className="w-[400px] mt-[52px]">
             <button
               onClick={handleLogin}
-              className="bg-primary rounded-[86px] w-full font-primary font-semibold text-[20.6px] text-white px-[135px] py-[20px] shadow-[0px_6px_8px_-2px_rgba(0,_0,_0,_0.4)]"
+              className="relative bg-primary rounded-[86px] w-full font-primary font-semibold text-[20.6px] text-white px-[135px] py-[20px] shadow-[0px_6px_8px_-2px_rgba(0,_0,_0,_0.4)] flex justify-center items-center"
+              style={{
+                background: !isLoading ? "radial-gradient(circle, rgb(91, 54, 245) -75%, rgb(0, 0, 0) 50%)" : "",
+              }}
             >
-              Login
+              {isLoading ? <CircleLoader color="#ffffff" size={30} /> : "Login"}
             </button>
             <p className="font-sans text-[13.4px] mt-[35px] text-center">
               Already have an account ?{" "}

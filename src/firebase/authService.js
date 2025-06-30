@@ -1,22 +1,24 @@
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./firebase.config";
 import { toast } from "react-toastify";
 
+const errorMessages = {
+  // Sign-Up Errors
+  "auth/email-already-in-use": "The email address is already in use by another account.",
+  "auth/user-disabled": "This user account has been disabled.",
+  "auth/too-many-requests": "Too many unsuccessful attempts. Please try again later.",
+  "auth/network-request-failed": "Network error. Please check your internet connection.",
+
+  // Sign-In Errors
+  "auth/user-not-found": "No user found with this email address.",
+  "auth/invalid-credential": "The provided credential is invalid.",
+};
 export async function signUpUser(email, password) {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    return userCredential.user; // Return the user object
+    return userCredential.user;
   } catch (error) {
-    //*Locally handles email and password validation
-    const errorMessages = {
-      "auth/email-already-in-use": "The email address is already in use by another account.",
-      //   "auth/invalid-email": "The email address is not valid.",
-      //   "auth/weak-password": "Password should be at least 6 characters long.",
-    };
-
-    const errorMessage = errorMessages[error.code] || "An unexpected error occurred. Please try again later.";
-
-    throw new Error(errorMessage); // Propagate the error using throw
+    throw new Error(errorMessages[error.code] || "An unexpected error occurred. Please try again later.");
   }
 }
 
@@ -29,7 +31,15 @@ export async function emailVerification() {
       toast.info("Verification email sent to:  " + auth.currentUser.email);
     }, 1000);
   } catch (error) {
-    // Throwing a more descriptive error message
     throw new Error(error.message || "An error occurred while sending the verification email.");
+  }
+}
+
+export async function signInUser(email, password) {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return userCredential;
+  } catch (error) {
+    throw new Error(errorMessages[error.code] || "An unexpected error occurred. Please try again later.");
   }
 }
