@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import login from "../assets/Login.png";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
@@ -6,10 +6,11 @@ import { Link, useNavigate } from "react-router";
 import { FcGoogle } from "react-icons/fc";
 import { CircleLoader } from "react-spinners";
 import { signInUser } from "../firebase/authService";
-import { Bounce, toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 function Login() {
   const navigate = useNavigate();
+  const passwordInputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const [loginInfo, setLoginInfo] = useState({
@@ -24,7 +25,7 @@ function Login() {
   const [showPass, setShowPass] = useState(false);
 
   const handleEmail = (e) => {
-    setLoginInfo((prev) => ({ ...prev, email: e.target.value }));
+    setLoginInfo((prev) => ({ ...prev, email: e.target.value.trim() }));
     setLoginErrors((prev) => ({ ...prev, emailError: "" }));
   };
 
@@ -90,19 +91,6 @@ function Login() {
 
   return (
     <div className="flex items-center">
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Bounce}
-      />
       <div className="w-[52%] ml-[20%] align-center ">
         <h2 className="text-secondary text-[35px] font-bold font-sans">Login to your account!</h2>
         <div className="flex items-center ml-[3px] py-[23px] pr-[40px] pl-[30px] w-[240px] border-2 border-black/20 cursor-pointer mt-[30px] rounded-[8.6px]">
@@ -116,6 +104,7 @@ function Login() {
           <div className="relative mt-[62px] ml-[3px] w-[400px]">
             <input
               onChange={handleEmail}
+              onKeyDown={(e) => e.key === "Enter" && passwordInputRef.current.focus()}
               value={loginInfo.email}
               type="email"
               className={`w-full py-[26.6px] px-[52px] text-[18px] font-secondary font-semibold border-2   text-black/80 rounded-[8.6px] ${
@@ -134,7 +123,8 @@ function Login() {
           <div className=" w-[400px] relative mt-[45px] ml-[3px]">
             <input
               onChange={handlePassword}
-              onKeyDown={(e) => (e.key === "Enter" ? handleLogin() : "")}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+              ref={passwordInputRef}
               value={loginInfo.password}
               type={showPass ? "text" : "password"}
               className={`w-full py-[26.6px] px-[52px] text-[18px] font-secondary font-semibold border-2 text-black/80  rounded-[8.6px] ${
@@ -142,7 +132,11 @@ function Login() {
               } focus:outline-0 `}
               placeholder="Enter password"
             />
-            <button className="absolute top-1/2  translate-y-[-50%] right-[20px] text-[22px] cursor-pointer p-[2px]">
+            <button
+              className={`absolute top-1/2 ${
+                !loginErrors.passwordError ? "translate-y-[-80%]" : "translate-y-[-120%]"
+              }  right-[20px] text-[22px] cursor-pointer p-[2px]`}
+            >
               {showPass ? (
                 <IoMdEyeOff onClick={() => setShowPass(!showPass)} />
               ) : (
@@ -152,6 +146,13 @@ function Login() {
 
             <p className="w-full text-white bg-red-500 text-[13px] font-secondary rounded-b-[8.6px] px-[12px] tracking-wider font-semibold ">
               {loginErrors.passwordError}
+            </p>
+            <p
+              className="text-primary/60 hover:underline leading-[3px] pl-[10px] text-[13px] font-semibold font-primary mt-[15px] cursor-pointer tracking-wider inline-block"
+              style={{ wordSpacing: "2px" }}
+              onClick={() => navigate("/forgotpassword")}
+            >
+              Forgot password?
             </p>
             <label className="absolute top-[-25px] left-[34.4px] text-[16px] tracking-[3px] bg-white text-secondary/70 px-[16px] py-[12px] text-center font-semibold">
               Password
@@ -166,7 +167,7 @@ function Login() {
                 background: !isLoading ? "radial-gradient(circle, rgb(91, 54, 245) -75%, rgb(0, 0, 0) 50%)" : "",
               }}
             >
-              {isLoading ? <CircleLoader color="#ffffff" size={30} /> : "Login"}
+              {isLoading ? <CircleLoader color="#B19EFF" size={30} /> : "Login"}
             </button>
             <p className="font-sans text-[13.4px] mt-[35px] text-center">
               Already have an account ?{" "}

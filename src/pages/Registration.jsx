@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import registration from "../assets/registration.png";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
@@ -9,13 +9,18 @@ import { CircleLoader } from "react-spinners";
 
 function Registration() {
   const navigate = useNavigate();
+  const inputRefs = {
+    email: useRef(null),
+    fullName: useRef(null),
+    password: useRef(null),
+  };
   const [isLoading, setIsLoading] = useState(false);
+
   const [registrationInfo, setRegistrationInfo] = useState({
     email: "",
     fullName: "",
     password: "",
   });
-
   const [registrationErrors, setRegistrationErrors] = useState({
     emailError: "",
     fullNameError: "",
@@ -24,7 +29,7 @@ function Registration() {
   const [showPass, setShowPass] = useState(false);
 
   const handleEmail = (e) => {
-    setRegistrationInfo((prev) => ({ ...prev, email: e.target.value }));
+    setRegistrationInfo((prev) => ({ ...prev, email: e.target.value.trim() }));
     setRegistrationErrors((prev) => ({ ...prev, emailError: "" }));
   };
   const handleFullName = (e) => {
@@ -105,19 +110,6 @@ function Registration() {
 
   return (
     <div className="flex items-center">
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Bounce}
-      />
       <div className="w-[52%] ml-[20%] align-center ">
         <h2 className="text-secondary text-[35px] font-bold font-secondary">Get started with easily register</h2>
         <p className="text-[20px] text-primary/50 mt-[13px]">Free register and you can enjoy it</p>
@@ -126,6 +118,8 @@ function Registration() {
           <div className="relative mt-[62px] ml-[3px] w-[400px]">
             <input
               onChange={handleEmail}
+              onKeyDown={(e) => e.key === "Enter" && inputRefs.fullName.current.focus()}
+              ref={inputRefs.email}
               value={registrationInfo.email}
               type="email"
               className={`w-full py-[26.6px] px-[52px] text-[18px] font-secondary font-semibold border-2   text-black/80 rounded-[8.6px] ${
@@ -143,6 +137,8 @@ function Registration() {
           <div className=" w-[400px] relative mt-[50px] ml-[3px]">
             <input
               onChange={handleFullName}
+              onKeyDown={(e) => e.key === "Enter" && inputRefs.password.current.focus()}
+              ref={inputRefs.fullName}
               value={registrationInfo.fullName}
               type="text"
               className={`w-full py-[26.6px] px-[52px] text-[18px] font-secondary font-semibold border-2   text-black/80 rounded-[8.6px] ${
@@ -160,6 +156,8 @@ function Registration() {
           <div className=" w-[400px] relative mt-[50px] ml-[3px]">
             <input
               onChange={handlePassword}
+              onKeyDown={(e) => e.key === "Enter" && handleRegistration()}
+              ref={inputRefs.password}
               value={registrationInfo.password}
               type={showPass ? "text" : "password"}
               className={`w-full py-[26.6px] px-[52px] text-[18px] font-secondary font-semibold border-2 text-black/80  rounded-[8.6px] ${
@@ -191,7 +189,7 @@ function Registration() {
                 background: !isLoading ? "radial-gradient(circle, rgb(91, 54, 245) -75%, rgb(0, 0, 0) 50%)" : "",
               }}
             >
-              {isLoading ? <CircleLoader color="#ffffff" size={30} /> : "Sign Up"}
+              {isLoading ? <CircleLoader color="#B19EFF" size={30} /> : "Sign Up"}
             </button>
             <p className="font-sans text-[13.4px] mt-[35px] text-center">
               Already have an account ?{" "}
