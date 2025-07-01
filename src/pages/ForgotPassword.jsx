@@ -81,7 +81,7 @@ const ForgotPassword = () => {
               onClick={handleForgotPassword}
               className="relative bg-primary rounded-[86px] w-[400px] font-primary font-semibold text-[20.6px] text-white px-[100px] py-[20px] shadow-[0px_6px_8px_-2px_rgba(0,_0,_0,_0.4)] flex justify-center items-center mt-[28px]"
               style={{
-                background: !isLoading ? "radial-gradient(circle, rgb(91, 54, 245) -95%, rgb(0, 0, 0) 50%)" : "",
+                background: !isLoading ? "radial-gradient(circle, rgb(91, 54, 245) -130%, rgb(0, 0, 0) 50%)" : "",
               }}
             >
               {isLoading ? <CircleLoader color="#B19EFF" size={30} /> : "Send Reset Email"}

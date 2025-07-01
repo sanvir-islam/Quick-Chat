@@ -5,7 +5,7 @@ import { IoMdEyeOff } from "react-icons/io";
 import { Link, useNavigate } from "react-router";
 import { FcGoogle } from "react-icons/fc";
 import { CircleLoader } from "react-spinners";
-import { signInUser } from "../firebase/authService";
+import { signInUser, signInWithGoogle } from "../firebase/authService";
 import { toast } from "react-toastify";
 
 function Login() {
@@ -75,7 +75,7 @@ function Login() {
         toast.success("Successfully logged in!");
         setTimeout(() => {
           navigate("/home");
-        }, 1500);
+        }, 1000);
       } catch (error) {
         toast.error(error.message);
       } finally {
@@ -86,11 +86,27 @@ function Login() {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    toast.dismiss();
+    try {
+      await signInWithGoogle();
+      toast.success("Successfully logged in!");
+
+      setTimeout(() => {
+        navigate("/home");
+      }, 1000);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
   return (
     <div className="flex items-center">
       <div className="w-[52%] ml-[20%] align-center ">
         <h2 className="text-secondary text-[35px] font-bold font-sans">Login to your account!</h2>
-        <div className="flex items-center ml-[3px] py-[23px] pr-[40px] pl-[30px] w-[240px] border-2 border-black/20 cursor-pointer mt-[30px] rounded-[8.6px]">
+        <div
+          className="flex items-center ml-[3px] py-[23px] pr-[40px] pl-[30px] w-[240px] border-2 border-black/20 cursor-pointer mt-[30px] rounded-[8.6px]"
+          onClick={handleGoogleSignIn}
+        >
           <span className="w-[20px] h-[20px] mr-[10px]">
             <FcGoogle className="w-full h-full" />
           </span>
@@ -161,7 +177,7 @@ function Login() {
               onClick={handleLogin}
               className="relative bg-primary rounded-[86px] w-full font-primary font-semibold text-[20.6px] text-white px-[135px] py-[20px] shadow-[0px_6px_8px_-2px_rgba(0,_0,_0,_0.4)] flex justify-center items-center"
               style={{
-                background: !isLoading ? "radial-gradient(circle, rgb(91, 54, 245) -75%, rgb(0, 0, 0) 50%)" : "",
+                background: !isLoading ? "radial-gradient(circle, rgb(91, 54, 245) -130%, rgb(0, 0, 0) 50%)" : "",
               }}
             >
               {isLoading ? <CircleLoader color="#B19EFF" size={30} /> : "Login"}
