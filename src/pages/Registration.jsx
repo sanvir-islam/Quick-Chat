@@ -3,7 +3,7 @@ import registration from "../assets/registration.png";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
 import { Link, useNavigate } from "react-router";
-import { Bounce, toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { emailVerification, signUpUser } from "../firebase/authService";
 import { CircleLoader } from "react-spinners";
 
@@ -28,17 +28,11 @@ function Registration() {
   });
   const [showPass, setShowPass] = useState(false);
 
-  const handleEmail = (e) => {
-    setRegistrationInfo((prev) => ({ ...prev, email: e.target.value.trim() }));
-    setRegistrationErrors((prev) => ({ ...prev, emailError: "" }));
-  };
-  const handleFullName = (e) => {
-    setRegistrationInfo((prev) => ({ ...prev, fullName: e.target.value }));
-    setRegistrationErrors((prev) => ({ ...prev, fullNameError: "" }));
-  };
-  const handlePassword = (e) => {
-    setRegistrationInfo((prev) => ({ ...prev, password: e.target.value }));
-    setRegistrationErrors((prev) => ({ ...prev, passwordError: "" }));
+  const handleInputChange = (e, field) => {
+    const value = field === "password" ? e.target.value : e.target.value.trim();
+
+    setRegistrationInfo((prev) => ({ ...prev, [field]: value }));
+    setRegistrationErrors((prev) => ({ ...prev, [`${field}Error`]: "" }));
   };
 
   const handleRegistrationValidation = () => {
@@ -117,7 +111,7 @@ function Registration() {
         <div className="mt-[62px]">
           <div className="relative mt-[62px] ml-[3px] w-[400px]">
             <input
-              onChange={handleEmail}
+              onChange={(e) => handleInputChange(e, "email")}
               onKeyDown={(e) => e.key === "Enter" && inputRefs.fullName.current.focus()}
               ref={inputRefs.email}
               value={registrationInfo.email}
@@ -136,7 +130,7 @@ function Registration() {
           </div>
           <div className=" w-[400px] relative mt-[50px] ml-[3px]">
             <input
-              onChange={handleFullName}
+              onChange={(e) => handleInputChange(e, "fullName")}
               onKeyDown={(e) => e.key === "Enter" && inputRefs.password.current.focus()}
               ref={inputRefs.fullName}
               value={registrationInfo.fullName}
@@ -155,7 +149,7 @@ function Registration() {
           </div>
           <div className=" w-[400px] relative mt-[50px] ml-[3px]">
             <input
-              onChange={handlePassword}
+              onChange={(e) => handleInputChange(e, "password")}
               onKeyDown={(e) => e.key === "Enter" && handleRegistration()}
               ref={inputRefs.password}
               value={registrationInfo.password}
@@ -165,7 +159,11 @@ function Registration() {
               } focus:outline-0 `}
               placeholder="Enter password"
             />
-            <button className="absolute top-1/2  translate-y-[-50%] right-[20px] text-[22px] cursor-pointer p-[2px]">
+            <button
+              className={`absolute top-1/2 ${
+                !registrationErrors.passwordError ? "translate-y-[-50%]" : "translate-y-[-86%]"
+              }  right-[20px] text-[22px] cursor-pointer p-[2px]`}
+            >
               {showPass ? (
                 <IoMdEyeOff onClick={() => setShowPass(!showPass)} />
               ) : (
@@ -184,9 +182,10 @@ function Registration() {
           <div className="w-[400px] mt-[52px]">
             <button
               onClick={handleRegistration}
+              disabled={isLoading}
               className="relative bg-primary rounded-[86px] w-full font-primary font-semibold text-[20.6px] text-white px-[135px] py-[20px] shadow-[0px_6px_8px_-2px_rgba(0,_0,_0,_0.4)] flex justify-center items-center"
               style={{
-                background: !isLoading ? "radial-gradient(circle, rgb(91, 54, 245) -75%, rgb(0, 0, 0) 50%)" : "",
+                background: !isLoading ? "radial-gradient(circle, rgb(91, 54, 245) -130%, rgb(0, 0, 0) 50%)" : "",
               }}
             >
               {isLoading ? <CircleLoader color="#B19EFF" size={30} /> : "Sign Up"}

@@ -24,14 +24,11 @@ function Login() {
   });
   const [showPass, setShowPass] = useState(false);
 
-  const handleEmail = (e) => {
-    setLoginInfo((prev) => ({ ...prev, email: e.target.value.trim() }));
-    setLoginErrors((prev) => ({ ...prev, emailError: "" }));
-  };
+  const handleInputChange = (e, field) => {
+    const value = field === "password" ? e.target.value : e.target.value.trim();
 
-  const handlePassword = (e) => {
-    setLoginInfo((prev) => ({ ...prev, password: e.target.value }));
-    setLoginErrors((prev) => ({ ...prev, passwordError: "" }));
+    setLoginInfo((prev) => ({ ...prev, [field]: value }));
+    setLoginErrors((prev) => ({ ...prev, [`${field}Error`]: "" }));
   };
 
   const handleLoginValidation = () => {
@@ -103,7 +100,7 @@ function Login() {
         <div className="mt-[80px]">
           <div className="relative mt-[62px] ml-[3px] w-[400px]">
             <input
-              onChange={handleEmail}
+              onChange={(e) => handleInputChange(e, "email")}
               onKeyDown={(e) => e.key === "Enter" && passwordInputRef.current.focus()}
               value={loginInfo.email}
               type="email"
@@ -122,7 +119,7 @@ function Login() {
 
           <div className=" w-[400px] relative mt-[45px] ml-[3px]">
             <input
-              onChange={handlePassword}
+              onChange={(e) => handleInputChange(e, "password")}
               onKeyDown={(e) => e.key === "Enter" && handleLogin()}
               ref={passwordInputRef}
               value={loginInfo.password}
@@ -134,7 +131,7 @@ function Login() {
             />
             <button
               className={`absolute top-1/2 ${
-                !loginErrors.passwordError ? "translate-y-[-80%]" : "translate-y-[-120%]"
+                !loginErrors.passwordError ? "translate-y-[-95%]" : "translate-y-[-135%]"
               }  right-[20px] text-[22px] cursor-pointer p-[2px]`}
             >
               {showPass ? (
