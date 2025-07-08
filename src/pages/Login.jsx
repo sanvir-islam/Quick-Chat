@@ -82,7 +82,7 @@ function Login() {
         setIsLoading(false);
       }
     } else {
-      console.log("Login Failed: Some fields are invalid");
+      toast.error("Login Failed: Some fields are invalid");
     }
   };
 

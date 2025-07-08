@@ -12,7 +12,7 @@ export default function authErrorMessage(errorCode) {
 
     // Google Popup Errors
     "auth/cancelled-popup-request": "Sign-in was cancelled. Please try again.",
-    "auth/popup-closed-by-user": "Popup closed before sign-in completed.",
+    "auth/popup-closed-by-user": "Google popup closed before sign-in completed.",
     "auth/timeout": "Sign-in timed out. Try again.",
     "auth/internal-error": "Internal error. Please try again later.",
 
