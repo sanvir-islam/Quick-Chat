@@ -1,14 +1,25 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import registration from "../assets/registration.png";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
 import { Link, useNavigate } from "react-router";
 import { toast } from "react-toastify";
-import { emailVerification, signUpUser } from "../firebase/authService";
+import { signUpUser } from "../firebase/authService";
 import { CircleLoader } from "react-spinners";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserInfo } from "../slice/userSlice";
 
 function Registration() {
+  const userInfo = useSelector((state) => state.user.value);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  useEffect(() => {
+    if (userInfo) {
+      toast.warn("You are already registered.");
+      navigate("/home");
+    }
+  }, []);
+
   const inputRefs = {
     email: useRef(null),
     fullName: useRef(null),
@@ -77,8 +88,9 @@ function Registration() {
     if (isValid) {
       setIsLoading(true);
       try {
-        await signUpUser(registrationInfo.email, registrationInfo.password);
-        await emailVerification();
+        const user = await signUpUser(registrationInfo.email, registrationInfo.password);
+
+        dispatch(setUserInfo(user));
 
         // clear input fields
         setRegistrationInfo({
@@ -88,10 +100,9 @@ function Registration() {
         });
 
         toast.success("Successfully signed up!");
-
         setTimeout(() => {
-          navigate("/login");
-        }, 3000);
+          navigate("/home");
+        }, 1500);
       } catch (error) {
         toast.error(error.message);
       } finally {
@@ -190,7 +201,7 @@ function Registration() {
             >
               {isLoading ? <CircleLoader color="#B19EFF" size={30} /> : "Sign Up"}
             </button>
-            <p className="font-sans text-[13.4px] mt-[35px] text-center">
+            <p className="font-sans text-[13.4px] mt-[35px] text-center mb-[20px]">
               Already have an account ?{" "}
               <span className="text-[#EA6C00] font-bold font-sans text-[13.4px] cursor-pointer">
                 <Link to="/login">Sign In</Link>

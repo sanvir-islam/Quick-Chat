@@ -23,7 +23,7 @@ export async function signUpUser(email, password) {
 export async function signInUser(email, password) {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    return userCredential;
+    return userCredential.user;
   } catch (error) {
     throw new Error(authErrorMessage(error.code));
   }
@@ -48,7 +48,7 @@ export async function emailVerification() {
       toast.info("Verification email sent to:  " + auth.currentUser.email);
     }, 1000);
   } catch (error) {
-    throw new Error(error.message || "An error occurred while sending the verification email.");
+    throw new Error(authErrorMessage(error.code) || "An error occurred while sending the verification email.");
   }
 }
 
@@ -61,7 +61,18 @@ export async function forgotPassword(email) {
     );
   }
 }
-export async function logout() {
+
+// export function authObserver(callback) {
+//   return onAuthStateChanged(auth, (user) => {
+//     if (user) {
+//       callback(null, user);
+//     } else {
+//       callback("No user is signed in.", null);
+//     }
+//   });
+// }
+
+export async function logoutUser() {
   try {
     await signOut(auth);
   } catch (error) {

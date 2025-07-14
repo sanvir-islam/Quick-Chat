@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import login from "../assets/Login.png";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
@@ -7,11 +7,22 @@ import { FcGoogle } from "react-icons/fc";
 import { CircleLoader } from "react-spinners";
 import { signInUser, signInWithGoogle } from "../firebase/authService";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserInfo } from "../slice/userSlice";
 
 function Login() {
+  const userInfo = useSelector((state) => state.user.value);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const passwordInputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (userInfo) {
+      toast.warn("You are already logged in.");
+      navigate("/home");
+    }
+  }, []);
 
   const [loginInfo, setLoginInfo] = useState({
     email: "",
@@ -66,7 +77,8 @@ function Login() {
     if (isValid) {
       setIsLoading(true);
       try {
-        await signInUser(loginInfo.email, loginInfo.password);
+        const user = await signInUser(loginInfo.email, loginInfo.password);
+        dispatch(setUserInfo(user));
         //clear the fields
         setLoginInfo({
           email: "",
@@ -87,9 +99,10 @@ function Login() {
   };
 
   const handleGoogleSignIn = async () => {
-    toast.dismiss();
     try {
-      await signInWithGoogle();
+      const user = await signInWithGoogle();
+      dispatch(setUserInfo(user));
+
       toast.success("Successfully logged in!");
 
       setTimeout(() => {
@@ -99,6 +112,7 @@ function Login() {
       toast.error(error.message);
     }
   };
+
   return (
     <div className="flex items-center">
       <div className="w-[52%] ml-[20%] align-center ">
@@ -182,7 +196,7 @@ function Login() {
             >
               {isLoading ? <CircleLoader color="#B19EFF" size={30} /> : "Login"}
             </button>
-            <p className="font-sans text-[13.4px] mt-[35px] text-center">
+            <p className="font-sans text-[13.4px] mt-[35px] text-center mb-[20px]">
               Already have an account ?{" "}
               <span className="text-[#EA6C00] font-bold font-sans text-[13.4px] cursor-pointer">
                 <Link to="/registration">Sign Up</Link>

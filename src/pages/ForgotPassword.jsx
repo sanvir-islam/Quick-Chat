@@ -90,23 +90,25 @@ const ForgotPassword = () => {
         )}
 
         <div className="mt-5 text-center ">
-          <Link
-            to="/login"
-            className="flex justify-center items-center text-sm font-semibold text-blue-600 hover:underline font-secondary"
-          >
-            Back to Login
-            {success && (
-              <span className="opacity-60 text-blue-600">
-                <Countdown
-                  date={Date.now() + 5000} // Set countdown to 5 seconds
-                  onComplete={() => navigate("/login")}
-                  renderer={({ seconds }) => {
-                    return seconds > 0 ? <p>&nbsp;({seconds})</p> : null;
-                  }}
-                />
-              </span>
-            )}
-          </Link>
+          <span className="inline-block">
+            <Link
+              to="/login"
+              className="flex justify-center items-center text-sm font-semibold text-blue-600 hover:underline font-secondary"
+            >
+              Back to Login
+              {success && (
+                <span className="opacity-60 text-blue-600">
+                  <Countdown
+                    date={Date.now() + 5000} // Set countdown to 5 seconds
+                    onComplete={() => navigate("/login")}
+                    renderer={({ seconds }) => {
+                      return seconds > 0 ? <p>&nbsp;({seconds})</p> : null;
+                    }}
+                  />
+                </span>
+              )}
+            </Link>
+          </span>
         </div>
       </div>
     </div>
