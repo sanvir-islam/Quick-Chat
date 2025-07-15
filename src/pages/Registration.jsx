@@ -99,7 +99,7 @@ function Registration() {
           password: "",
         });
 
-        toast.success("Successfully signed up!");
+        toast.success("Successfully signed up and logged in!");
         setTimeout(() => {
           navigate("/home");
         }, 1500);
