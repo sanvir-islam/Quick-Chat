@@ -1,6 +1,6 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
 import profile from "../../assets/profile.png";
-import "../CustomScrollBar.css";
+import "../customScrollBar.css";
 
 function GroupList() {
   return (
@@ -19,7 +19,7 @@ function GroupList() {
         <div className="relative flex justify-between align-middle mb-[28px] ">
           <div className="flex justify-between align-middle">
             <div className="w-[70px] h-[70px]">
-              <img src={profile} alt="userPorfile pic" className="w-full h-full object-cover" />
+              <img src={profile} alt="userPorfile pic" className="w-full h-full object-cover rounded-[50%]" />
             </div>
             <div className="flex flex-col justify-center align-middle ml-[14px]">
               <h3 className="font-primary font-semibold text-primary text-[18px] ">Friends Reunion</h3>

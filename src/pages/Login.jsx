@@ -5,10 +5,11 @@ import { IoMdEyeOff } from "react-icons/io";
 import { Link, useNavigate } from "react-router";
 import { FcGoogle } from "react-icons/fc";
 import { CircleLoader } from "react-spinners";
-import { signInUser, signInWithGoogle } from "../firebase/authService";
+import { signInUser, signInWithGoogle } from "../firebase/services/authService";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserInfo } from "../slice/userSlice";
+import { writeDataInDb } from "../firebase/services/dbService";
 
 function Login() {
   const userInfo = useSelector((state) => state.user.value);
@@ -20,7 +21,9 @@ function Login() {
   useEffect(() => {
     if (userInfo) {
       toast.warn("You are already logged in.");
-      navigate("/home");
+      setTimeout(() => {
+        navigate("/home");
+      }, 500);
     }
   }, []);
 
@@ -101,10 +104,11 @@ function Login() {
   const handleGoogleSignIn = async () => {
     try {
       const user = await signInWithGoogle();
+      await writeDataInDb("users/" + user.uid, { email: user.email, username: user.displayName });
+
       dispatch(setUserInfo(user));
 
       toast.success("Successfully logged in!");
-
       setTimeout(() => {
         navigate("/home");
       }, 1000);

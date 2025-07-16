@@ -4,10 +4,11 @@ import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
 import { Link, useNavigate } from "react-router";
 import { toast } from "react-toastify";
-import { signUpUser } from "../firebase/authService";
+import { signUpUser } from "../firebase/services/authService";
 import { CircleLoader } from "react-spinners";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserInfo } from "../slice/userSlice";
+import { updateUserInfo, writeDataInDb } from "../firebase/services/dbService";
 
 function Registration() {
   const userInfo = useSelector((state) => state.user.value);
@@ -16,7 +17,9 @@ function Registration() {
   useEffect(() => {
     if (userInfo) {
       toast.warn("You are already registered.");
-      navigate("/home");
+      setTimeout(() => {
+        navigate("/home");
+      }, 500);
     }
   }, []);
 
@@ -89,9 +92,9 @@ function Registration() {
       setIsLoading(true);
       try {
         const user = await signUpUser(registrationInfo.email, registrationInfo.password);
-
+        await updateUserInfo(registrationInfo.fullName);
+        await writeDataInDb("users/" + user.uid, { email: user.email, username: user.displayName });
         dispatch(setUserInfo(user));
-
         // clear input fields
         setRegistrationInfo({
           email: "",
@@ -99,10 +102,10 @@ function Registration() {
           password: "",
         });
 
-        toast.success("Successfully signed up and logged in!");
+        toast.success("Successfully signed u p and logged in!");
         setTimeout(() => {
-          navigate("/home");
-        }, 1500);
+          navigate("/emailverification");
+        }, 1000);
       } catch (error) {
         toast.error(error.message);
       } finally {

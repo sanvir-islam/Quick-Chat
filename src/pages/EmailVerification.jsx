@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux"; // To access Redux store
 import logo from "../assets/logo.png";
-import { Link, useNavigate } from "react-router"; // Assuming you're using react-router
+import { useNavigate } from "react-router"; // Assuming you're using react-router
 import { toast } from "react-toastify";
-import { emailVerification, logoutUser } from "../firebase/authService"; // Assuming the verification function exists
+import { emailVerification, logoutUser } from "../firebase/services/authService"; // Assuming the verification function exists
 import { CircleLoader } from "react-spinners";
 import { logout } from "../slice/userSlice";
 
@@ -74,7 +74,7 @@ const EmailVerification = () => {
   };
   return (
     <div className="flex min-h-screen items-center justify-center w-[500px] m-auto ">
-      <div className="mx-3 w-full max-w-lg rounded-lg border-2 border-[#4FD69C]/50 p-6 sm:p-10 m-auto shadow-[0px_0px_4px_1px_rgba(79,214,156,1)]">
+      <div className="mx-3 w-full max-w-lg rounded-lg border-2 border-black/10 p-6 sm:p-10 m-auto shadow-[0px_0px_4px_1px_rgba(79,214,156,.3)]">
         <div className="w-[60px] m-auto ">
           <img src={logo} alt="#logo" className="object-contain w-full h-full" />
         </div>

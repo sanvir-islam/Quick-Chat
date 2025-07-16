@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import HomeSkeleton from "../components/landing/HomeSkeleton";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutUser } from "../firebase/authService";
+import { logoutUser } from "../firebase/services/authService";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import Sidebar from "../components/landing/Sidebar";
@@ -29,6 +29,7 @@ function Home() {
         setVerify(true);
       } else navigate("/emailVerification");
     } else {
+      dispatch(logout());
       navigate("/login");
     }
   }, []);
@@ -37,10 +38,8 @@ function Home() {
     try {
       await logoutUser();
       dispatch(logout()); //clear the store
-      setTimeout(() => {
-        navigate("/login");
-        toast.success("You have been logged out successfully.");
-      }, 500);
+      navigate("/login");
+      toast.success("You have been logged out successfully.");
     } catch (error) {
       toast.error(error.message);
     }

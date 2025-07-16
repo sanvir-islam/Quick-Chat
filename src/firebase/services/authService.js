@@ -7,9 +7,9 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { auth } from "./firebase.config";
+import { auth } from "../firebase.config";
 import { toast } from "react-toastify";
-import authErrorMessage from "../utils/authErrorMessages";
+import authErrorMessage from "../../utils/authErrorMessages";
 
 export async function signUpUser(email, password) {
   try {
@@ -61,16 +61,6 @@ export async function forgotPassword(email) {
     );
   }
 }
-
-// export function authObserver(callback) {
-//   return onAuthStateChanged(auth, (user) => {
-//     if (user) {
-//       callback(null, user);
-//     } else {
-//       callback("No user is signed in.", null);
-//     }
-//   });
-// }
 
 export async function logoutUser() {
   try {

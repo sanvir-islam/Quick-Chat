@@ -3,25 +3,47 @@ import { VscHome } from "react-icons/vsc";
 import { ImExit } from "react-icons/im";
 import { IoSettingsOutline } from "react-icons/io5";
 import profile from "../../assets/profile.png";
+import "../../index.css";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 function Sidebar({ handleSignOut }) {
+  const [activeSection, setActiveSection] = useState("home");
+  const userInfo = useSelector((state) => state.user.value);
+
   return (
     <div className="h-full bg-black rounded-[20px]">
       <div className=" pt-[40px] mb-[80px]">
         <img src={profile} alt="#profile" className="h-[100px] w-[100px] mx-auto" />
+        <p className="font-bold font-secondary pt-[10px] text-white/80 text-center ">{userInfo.displayName}</p>
       </div>
 
-      <div className=" relative after:content-[''] after:absolute after:top-0 after:left-0 after:w-full after:h-full after:bg-white after:z-[-1] z-1 after:ml-[25px] after:rounded-l-[20px] pt-[20px] pb-[25px] before:content-[''] before:absolute before:right-0 before:top-0 before:w-[8px] before:h-full before:bg-primary before:rounded-l-[20px] before:shadow-[-2px_0px_4px_0px_rgba(0,0,0,0.2)]">
-        <VscHome size={50} className="mx-auto  cursor-pointer" />
+      <div
+        className={`relative z-1 pt-[20px] pb-[25px] cursor-pointer ${
+          activeSection === "home" ? "btn-active" : "text-white "
+        }`}
+        onClick={() => setActiveSection("home")}
+      >
+        <VscHome size={50} className="mx-auto  " />
       </div>
-      <div className=" relative after:content-[''] after:absolute after:top-0 after:left-0 after:w-full after:h-full after:bg-white after:z-[-1] z-1 after:ml-[25px] after:rounded-l-[20px] pt-[20px] pb-[25px] before:content-[''] before:absolute before:right-0 before:top-0 before:w-[8px] before:h-full before:bg-primary before:rounded-l-[20px] before:shadow-[-2px_0px_4px_0px_rgba(0,0,0,0.2)]">
-        <LuMessageCircleMore size={50} className="mx-auto cursor-pointer" />
+      <div
+        className={`relative z-1 pt-[20px] pb-[25px] cursor-pointer ${
+          activeSection === "message" ? "btn-active" : "text-white "
+        }`}
+        onClick={() => setActiveSection("message")}
+      >
+        <LuMessageCircleMore size={50} className="mx-auto" />
       </div>
-      <div className=" relative after:content-[''] after:absolute after:top-0 after:left-0 after:w-full after:h-full after:bg-white after:z-[-1] z-1 after:ml-[25px] after:rounded-l-[20px] pt-[20px] pb-[25px] before:content-[''] before:absolute before:right-0 before:top-0 before:w-[8px] before:h-full before:bg-primary before:rounded-l-[20px] before:shadow-[-2px_0px_4px_0px_rgba(0,0,0,0.2)]">
-        <IoSettingsOutline size={50} className="mx-auto cursor-pointer" />
+      <div
+        className={`relative z-1 pt-[20px] pb-[25px] cursor-pointer ${
+          activeSection === "setting" ? "btn-active" : "text-white "
+        }`}
+        onClick={() => setActiveSection("setting")}
+      >
+        <IoSettingsOutline size={50} className="mx-auto" />
       </div>
-      <div className="mt-[330px] cursor-pointer " onClick={handleSignOut}>
-        <ImExit size={65} className="mx-auto text-white" />
+      <div className="mt-[300px] cursor-pointer text-white" onClick={handleSignOut}>
+        <ImExit size={65} className="mx-auto" />
       </div>
     </div>
   );

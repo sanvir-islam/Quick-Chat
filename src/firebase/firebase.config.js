@@ -1,12 +1,13 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-// import { getFirestore } from "firebase/firestore";
+import { getDatabase } from "firebase/database";
 // import { getStorage } from "firebase/storage";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 const firebaseConfig = {
   apiKey: "AIzaSyBPYzCLcDLDH4wEaUgtr4xEf1PFHIU0kjo",
   authDomain: "react-quick-chat.firebaseapp.com",
+  databaseURL: "https://react-quick-chat-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "react-quick-chat",
   storageBucket: "react-quick-chat.firebasestorage.app",
   messagingSenderId: "372151713513",
@@ -16,5 +17,5 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
-// export const db = getFirestore(app);
+export const db = getDatabase();
 // export const storage = getStorage(app);

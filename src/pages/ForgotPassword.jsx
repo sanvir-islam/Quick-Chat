@@ -1,9 +1,8 @@
-// import { Mail } from "lucide-react";
 import { useState } from "react";
 import logo from "../assets/logo.png";
 import { Link, useNavigate } from "react-router";
 import { toast } from "react-toastify";
-import { forgotPassword } from "../firebase/authService";
+import { forgotPassword } from "../firebase/services/authService";
 import { CircleLoader } from "react-spinners";
 import Countdown from "react-countdown";
 
