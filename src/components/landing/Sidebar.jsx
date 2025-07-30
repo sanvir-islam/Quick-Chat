@@ -4,11 +4,11 @@ import { ImExit } from "react-icons/im";
 import { IoSettingsOutline } from "react-icons/io5";
 import profile from "../../assets/noProfilePic.png";
 import "../../index.css";
-import { useState } from "react";
+import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 
-function Sidebar({ handleSignOut }) {
-  const [activeSection, setActiveSection] = useState("home");
+function Sidebar({ handleSignOut, activeSection = "home" }) {
+  const navigate = useNavigate();
   const userInfo = useSelector((state) => state.user.value);
 
   return (
@@ -22,7 +22,7 @@ function Sidebar({ handleSignOut }) {
         className={`relative z-1 pt-[20px] pb-[25px] cursor-pointer ${
           activeSection === "home" ? "btn-active" : "text-white "
         }`}
-        onClick={() => setActiveSection("home")}
+        onClick={() => navigate("/home")}
       >
         <VscHome size={50} className="mx-auto  " />
       </div>
@@ -30,7 +30,7 @@ function Sidebar({ handleSignOut }) {
         className={`relative z-1 pt-[20px] pb-[25px] cursor-pointer ${
           activeSection === "message" ? "btn-active" : "text-white "
         }`}
-        onClick={() => setActiveSection("message")}
+        onClick={() => navigate("/message")}
       >
         <LuMessageCircleMore size={50} className="mx-auto" />
       </div>
@@ -38,7 +38,6 @@ function Sidebar({ handleSignOut }) {
         className={`relative z-1 pt-[20px] pb-[25px] cursor-pointer ${
           activeSection === "setting" ? "btn-active" : "text-white "
         }`}
-        onClick={() => setActiveSection("setting")}
       >
         <IoSettingsOutline size={50} className="mx-auto" />
       </div>

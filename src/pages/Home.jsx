@@ -50,20 +50,22 @@ function Home() {
       {verify ? (
         <div className="flex justify-center h-screen p-[35px] gap-[20px]">
           <div className="w-[186px] h-full mr-[23px]">
-            <Sidebar handleSignOut={handleSignOut} />
+            <Sidebar handleSignOut={handleSignOut} activeSection="home" />
           </div>
-          <div className="w-[427px]">
-            <SearchBar />
-            <GroupList />
-            <FriendRequest />
-          </div>
-          <div className="w-[344px]">
-            <FriendList />
-            <MyGroups />
-          </div>
-          <div className="w-[344px]">
-            <UserList />
-            <BlockedUsers />
+          <div className="relative flex justify-center h-full gap-[20px]">
+            <div className="w-[427px]">
+              <SearchBar />
+              <GroupList />
+              <FriendRequest />
+            </div>
+            <div className="w-[344px]">
+              <FriendList />
+              <MyGroups />
+            </div>
+            <div className="w-[344px]">
+              <UserList />
+              <BlockedUsers />
+            </div>
           </div>
         </div>
       ) : (
