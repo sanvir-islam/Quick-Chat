@@ -14,6 +14,7 @@ function Registration() {
   const userInfo = useSelector((state) => state.user.value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   useEffect(() => {
     if (userInfo) {
       toast.warn("You are already registered.");
@@ -93,7 +94,7 @@ function Registration() {
       try {
         const user = await signUpUser(registrationInfo.email, registrationInfo.password);
         await updateUserInfo(registrationInfo.fullName);
-        await writeDataInDb("users/" + user.uid, { email: user.email, username: user.displayName });
+        await writeDataInDb(`users/${user.uid}`, { email: user.email, username: user.displayName, id: user.uid });
         dispatch(setUserInfo(user));
         // clear input fields
         setRegistrationInfo({

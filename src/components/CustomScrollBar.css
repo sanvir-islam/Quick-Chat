@@ -2,6 +2,7 @@
   width: 100%; /* Or set your desired width */
   /* overflow-y: scroll;*/
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 /* Customize the scrollbar track (the background of the scrollbar) */

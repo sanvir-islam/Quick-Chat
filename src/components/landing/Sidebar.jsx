@@ -2,7 +2,7 @@ import { LuMessageCircleMore } from "react-icons/lu";
 import { VscHome } from "react-icons/vsc";
 import { ImExit } from "react-icons/im";
 import { IoSettingsOutline } from "react-icons/io5";
-import profile from "../../assets/profile.png";
+import profile from "../../assets/noProfilePic.png";
 import "../../index.css";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -14,7 +14,7 @@ function Sidebar({ handleSignOut }) {
   return (
     <div className="h-full bg-black rounded-[20px]">
       <div className=" pt-[40px] mb-[80px]">
-        <img src={profile} alt="#profile" className="h-[100px] w-[100px] mx-auto" />
+        <img src={profile} alt="#profile" className="h-[100px] w-[100px] mx-auto rounded-[50%]" />
         <p className="font-bold font-secondary pt-[10px] text-white/80 text-center ">{userInfo.displayName}</p>
       </div>
 

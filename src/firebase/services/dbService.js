@@ -1,4 +1,4 @@
-import { get, onValue, push, ref, remove, set } from "firebase/database";
+import { get, off, onValue, push, ref, remove, set } from "firebase/database";
 import { auth, db } from "../firebase.config";
 import { updateProfile } from "firebase/auth";
 
@@ -10,23 +10,42 @@ export async function writeDataInDb(path, data) {
     throw new Error(error.message);
   }
 }
-export async function createMessage(path, data) {
+export async function writeDataWithIdInDb(path, data) {
   try {
-    const dbRef = ref(db, path);
-    await push(dbRef, data);
+    const dbRef = push(ref(db, path));
+    await set(dbRef, { ...data, id: dbRef.key });
   } catch (error) {
     throw new Error(error.message);
   }
 }
 export async function readData(path) {
   try {
-    const snapShot = await get(ref(db, path));
+    const snapshot = await get(ref(db, path));
 
-    if (!snapShot.exists()) throw new Error("Data not found at path: " + path);
-    return snapShot;
+    if (!snapshot.exists()) return [];
+    return Object.values(snapshot.val());
   } catch (error) {
     throw new Error("Read Failed: " + error.message);
   }
+}
+export async function readSingleData(path) {
+  try {
+    const snapshot = await get(ref(db, path));
+
+    if (!snapshot.exists()) return [];
+    return snapshot.val();
+  } catch (error) {
+    throw new Error("Read Failed: " + error.message);
+  }
+}
+
+export function readDataObserver(path, callback) {
+  const dataRef = ref(db, path);
+  const listener = onValue(dataRef, (snapshot) => {
+    if (snapshot.exists()) callback(Object.values(snapshot.val()));
+    else callback([]);
+  });
+  return () => off(dataRef, "value", listener);
 }
 
 export async function updateUserInfo(data) {
@@ -35,11 +54,6 @@ export async function updateUserInfo(data) {
   } catch (error) {
     throw new Error(error.message);
   }
-}
-export function listenToPath(path, callback) {
-  const dbRef = ref(db, path);
-  const unsubscribe = onValue(dbRef, callback);
-  return unsubscribe; // call this in useEffect cleanup
 }
 
 export async function removeData(path) {

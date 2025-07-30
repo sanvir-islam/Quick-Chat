@@ -104,7 +104,7 @@ function Login() {
   const handleGoogleSignIn = async () => {
     try {
       const user = await signInWithGoogle();
-      await writeDataInDb("users/" + user.uid, { email: user.email, username: user.displayName });
+      await writeDataInDb(`users/${user.uid}`, { email: user.email, username: user.displayName, id: user.uid });
 
       dispatch(setUserInfo(user));
 

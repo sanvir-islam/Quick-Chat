@@ -66,7 +66,7 @@ const EmailVerification = () => {
     try {
       await logoutUser();
       dispatch(logout()); //clear the store
-      toast.success("You have been logged out successfully.");
+      toast.success("Logged out successfully.");
       navigate("/login");
     } catch (error) {
       toast.error(error.message);
@@ -107,13 +107,7 @@ const EmailVerification = () => {
           <div className="inline-block">
             <span
               className="flex justify-center items-center text-sm font-semibold text-blue-600 hover:underline font-secondary cursor-pointer"
-              onClick={async () => {
-                try {
-                  await handleSignOut();
-                } catch (error) {
-                  toast.error(error.message);
-                }
-              }}
+              onClick={handleSignOut}
             >
               Logout
             </span>
