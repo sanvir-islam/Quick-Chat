@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import profile from "../../assets/noProfilePic.png";
+import profile from "../../../assets/noProfilePic.png";
 import { RiQuestionAnswerLine } from "react-icons/ri";
 
 function SearchResult({ result }) {
@@ -21,7 +21,7 @@ function SearchResult({ result }) {
       <div className="flex justify-between align-middle gap-10">
         <span
           className={`text-xs tracking-wider font-medium  ${
-            result.tag === "User" ? "bg-green-100 text-green-600 " : "bg-yellow-100 text-yellow-600"
+            result.tag === "user" ? "bg-green-100 text-green-600 " : "bg-yellow-100 text-yellow-600"
           } px-4 py-2 rounded-full`}
         >
           {result.tag}

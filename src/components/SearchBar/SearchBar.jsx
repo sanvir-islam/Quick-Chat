@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoSearch } from "react-icons/io5";
 import { readDataObserver } from "../../firebase/services/dbService";
-import SearchResult from "../SearchResult/SearchResult";
+import SearchResult from "./SearchResult/SearchResult";
 
 function SearchBar() {
   const [searchInput, setSearchInput] = useState("");
@@ -47,11 +47,11 @@ function SearchBar() {
 
     const result = [];
     userList.forEach((user) => {
-      if (user.username.toLocaleLowerCase().includes(query)) result.push({ ...user, tag: "User" });
+      if (user.username.toLocaleLowerCase().includes(query)) result.push({ ...user, tag: "user" });
       return;
     });
     groupList.forEach((group) => {
-      if (group.grouptitle.toLocaleLowerCase().includes(query)) result.push({ ...group, tag: "Group" });
+      if (group.grouptitle.toLocaleLowerCase().includes(query)) result.push({ ...group, tag: "group" });
       return;
     });
     setSearchResult([...result]);

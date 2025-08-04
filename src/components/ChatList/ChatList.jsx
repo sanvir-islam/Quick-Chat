@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import profile from "../../assets/noProfilePic.png";
 import { readDataObserver } from "../../firebase/services/dbService";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { TbMessageOff } from "react-icons/tb";
-import SearchResult from "../SearchResult/SearchResult";
+import { setActiveChat } from "../../slice/activeChatSlice";
 
 function ChatList() {
   const userInfo = useSelector((state) => state.user.value);
+  const dispatch = useDispatch();
   const [chatSearchInput, setChatSearchInput] = useState("");
   const [searchResult, setSearchResult] = useState("");
   const [friendList, setFriendList] = useState([]);
@@ -16,14 +17,19 @@ function ChatList() {
     if (!userInfo) return;
 
     const unsubscribeFriendDataFetch = readDataObserver(`friends/${userInfo.uid}`, (data) => {
-      setFriendList(data);
+      const arr = data.map((friend) => ({
+        ...friend,
+        tag: "friend",
+        name: friend.username,
+      }));
+      setFriendList(arr);
     });
+
     const unsubscribeGroupDataFetch = readDataObserver("groups/", (data) => {
       const arr = [];
-
       data.forEach((groupData) => {
         if (groupData.adminid === userInfo.uid) {
-          arr.push(groupData);
+          arr.push({ ...groupData, tag: "group", name: groupData.grouptitle });
         }
       });
       setGroupList(arr);
@@ -44,19 +50,27 @@ function ChatList() {
     }
     const result = [];
     [...friendList, ...groupList].forEach((chat) => {
-      const newChat = chat.username
-        ? { ...chat, tag: "user", name: chat.username }
-        : { ...chat, tag: "group", name: chat.grouptitle };
-      if (newChat.name.toLocaleLowerCase().includes(query)) {
-        result.push(newChat);
+      if (chat.name.toLocaleLowerCase().includes(query)) {
+        result.push(chat);
       }
     });
 
     setSearchResult([...result]);
   }
+  function handleMessage(chat) {
+    // id => reciver + sernder
+    const newChat = {
+      ...chat,
+      id: chat.tag === "friend" ? chat.id + userInfo.uid : chat.adminid + userInfo.uid,
+      reciverid: chat.tag === "friend" ? chat.id : chat.adminid,
+      senderid: userInfo.uid,
+    };
+
+    dispatch(setActiveChat(newChat));
+  }
 
   return (
-    <div className="pl-[20px] pr-[15px] pb-[15px] pt-[19px] h-full rounded-l-[20px]  shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] w-full">
+    <div className="pl-[20px] pr-[15px] pb-[15px] pt-[19px] h-full rounded-l-[20px]  shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] w-full overflow-y-hidden">
       {/* title */}
       <div className="flex justify-between align-middle mb-[30px]">
         <h2 className="font-primary font-semibold text-[20px] text-primary pr-20">Chats</h2>
@@ -70,13 +84,14 @@ function ChatList() {
       </div>
 
       {/* users */}
-      <div className="relative h-[320px] w-[344px] pr-[10px] scrollbar-custom ">
+      <div className="relative w-[344px] h-full pr-[10px] scrollbar-custom pb-6">
         {/* user */}
         {(searchResult.length > 0 ? searchResult : [...friendList, ...groupList]).map((chat) => {
           return (
             <div
               className="relative flex justify-between align-middle mb-[32px] pr-[10px] cursor-pointer group "
               key={chat.id}
+              onClick={() => handleMessage(chat)}
             >
               <div className="flex justify-between align-middle">
                 <div className="w-[54px] h-[54px]">
@@ -93,7 +108,14 @@ function ChatList() {
                 </div>
               </div>
 
-              <div className="flex justify-center gap-4  mt-[5px]">
+              <div className="flex justify-center align-middle gap-8 py-1 mt-[4px]">
+                <span
+                  className={` text-[11px] tracking-wider font-semibold h-[25px] ${
+                    chat.tag === "friend" ? "bg-green-100 text-green-600 " : "bg-yellow-200/60 text-yellow-600"
+                  } px-3 py-1 rounded-[10px] mt-2.5`}
+                >
+                  {chat.tag}
+                </span>
                 <button>
                   <TbMessageOff size={26} className="text-red-600/60" />
                 </button>

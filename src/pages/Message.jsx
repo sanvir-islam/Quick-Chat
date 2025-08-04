@@ -24,7 +24,7 @@ function Message() {
     }
   };
   return (
-    <div className="flex justify-center h-screen p-[35px] gap-[20px]">
+    <div className="flex justify-center h-screen p-[35px] gap-[20px] overflow-hidden">
       <div className="w-[186px] h-full mr-[23px]">
         <Sidebar handleSignOut={handleSignOut} activeSection="message" />
       </div>

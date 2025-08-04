@@ -41,7 +41,7 @@ function BlockedUsers() {
       <div className=" h-[375px] w-[344px] pr-[15px] scrollbar-custom ">
         {/* user */}
         {blockList.map((blockedUser) => (
-          <div className="relative flex justify-between align-middle mb-[26px] ">
+          <div className="relative flex justify-between align-middle mb-[26px] " key={blockedUser.id}>
             <div className="flex justify-between align-middle">
               <div className="w-[54px] h-[54px]">
                 <img src={profile} alt="userPorfile pic" className="w-full h-full object-cover rounded-[50%]" />

@@ -9,6 +9,9 @@
   --color-primary: #1e1e1e;
   --color-secondary: #11175d;
 }
+* {
+  box-sizing: border-box;
+}
 button {
   cursor: pointer;
 }
