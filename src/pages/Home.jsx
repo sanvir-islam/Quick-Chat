@@ -38,7 +38,6 @@ function Home() {
     try {
       await logoutUser();
       dispatch(logout()); //clear the store
-
       navigate("/login");
       toast.success("You have been logged out successfully.");
     } catch (error) {

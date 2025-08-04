@@ -6,53 +6,43 @@ import { useEffect, useState } from "react";
 import { readDataObserver, removeData, writeDataInDb } from "../../firebase/services/dbService";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-import { FaSquareMinus } from "react-icons/fa6";
+import { LuMessageSquareOff } from "react-icons/lu";
 import { BiUndo } from "react-icons/bi";
 import { GoPersonAdd } from "react-icons/go";
+import { TbBellQuestion } from "react-icons/tb";
 
 function UserList() {
   const [userList, setUserList] = useState([]);
-  const [friendRequestKeyList, setFriendRequestKeyList] = useState([]);
   const [friendIdList, setFriendIdList] = useState([]);
+  const [friendRequestKeyList, setFriendRequestKeyList] = useState([]);
   const [blockedUserIdList, setBlockedUserIdList] = useState([]);
   const [blockedByIdList, setBlockedByIdList] = useState([]);
 
   const userInfo = useSelector((state) => state.user.value);
 
-  //fetching userLIst
+  //fetching data
   useEffect(() => {
     if (!userInfo) return;
 
-    const unsubscribe = readDataObserver("users/", (data) => {
+    const unsubscribeUserDataFetch = readDataObserver("users/", (data) => {
       const arr = data.filter((userData) => userData.id !== userInfo.uid);
       setUserList(arr);
     });
 
-    return () => unsubscribe();
-  }, []);
-
-  //add + / -  btn
-  useEffect(() => {
-    if (!userInfo) return;
-
-    const unsubscribe = readDataObserver("friendRequest/", (data) => {
+    const unsubscribeFriendDataFetch = readDataObserver(`friends/${userInfo.uid}`, (data) => {
+      const arr = data.map((friends) => friends.id);
+      setFriendIdList(arr);
+    });
+    const unsubscribeFriendReqDataFetch = readDataObserver("friendRequest/", (data) => {
       const arr = data.map((frReq) => frReq.id);
       setFriendRequestKeyList(arr);
     });
-
-    return () => unsubscribe();
-  }, []);
-
-  //blocked user should not be shown in the userlist
-  useEffect(() => {
-    if (!userInfo) return;
 
     // Your blocklist: people YOU blocked
     const unsubscribeBlocklist = readDataObserver(`blocklist/${userInfo.uid}`, (data) => {
       const blockedIds = data.map((blockedUser) => blockedUser.id);
       setBlockedUserIdList(blockedIds);
     });
-
     // Users who blocked YOU
     const unsubscribeBlockedBy = readDataObserver(`blockedBy/${userInfo.uid}`, (data) => {
       const blockedByIds = data.map((blocker) => blocker.id);
@@ -60,21 +50,12 @@ function UserList() {
     });
 
     return () => {
+      unsubscribeUserDataFetch();
+      unsubscribeFriendDataFetch();
+      unsubscribeFriendReqDataFetch();
       unsubscribeBlocklist();
       unsubscribeBlockedBy();
     };
-  }, []);
-
-  // for friend lable
-  useEffect(() => {
-    if (!userInfo) return;
-
-    const unsubscribe = readDataObserver(`friends/${userInfo.uid}`, (data) => {
-      const arr = data.map((friends) => friends.id);
-      setFriendIdList(arr);
-    });
-
-    return () => unsubscribe();
   }, []);
 
   const handleSendFriendRequest = async (recipientUser) => {
@@ -143,8 +124,8 @@ function UserList() {
                 ) : //friendRequest => reciver + sender | checking am i the sender
                 friendRequestKeyList.includes(userInfo.uid + user.id) ? (
                   //if i am the reciver
-                  <button>
-                    <FaSquareMinus size={30} className="text-primary/90 cursor-not-allowed" />
+                  <button title="pending request">
+                    <TbBellQuestion size={26} className="text-yellow-500/90 cursor-not-allowed" />
                   </button>
                 ) : friendRequestKeyList.includes(user.id + userInfo.uid) ? (
                   // if i am the sender

@@ -5,8 +5,8 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import Sidebar from "../components/landing/Sidebar";
 import SearchBar from "../components/SearchBar/SearchBar";
-import FriendList from "../components/FriendList/FriendList";
 import ChatBox from "../components/ChatBox/ChatBox";
+import ChatList from "../components/ChatList/ChatList";
 
 function Message() {
   const navigate = useNavigate();
@@ -28,12 +28,11 @@ function Message() {
       <div className="w-[186px] h-full mr-[23px]">
         <Sidebar handleSignOut={handleSignOut} activeSection="message" />
       </div>
-      <div className="relative flex justify-center h-full gap-[20px]">
-        <div className="w-[427px]">
-          <SearchBar />
-          <FriendList />
+      <div className="relative flex justify-center align-top h-full gap-[0px]">
+        <div className="w-[465px] h-full">
+          <ChatList />
         </div>
-        <div className="w-[708px]">
+        <div className="w-[690px]">
           <ChatBox />
         </div>
       </div>

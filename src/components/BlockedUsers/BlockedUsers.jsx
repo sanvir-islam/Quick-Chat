@@ -13,10 +13,10 @@ function BlockedUsers() {
   useEffect(() => {
     if (!userInfo) return;
 
-    const unsubscribe = readDataObserver(`blocklist/${userInfo.uid}`, (data) => {
+    const unsubscribeBlockListDataFetch = readDataObserver(`blocklist/${userInfo.uid}`, (data) => {
       setBlockList(data);
     });
-    return () => unsubscribe();
+    return () => unsubscribeBlockListDataFetch();
   }, []);
 
   async function handleRemoveFromBlockList(blockedUserId) {

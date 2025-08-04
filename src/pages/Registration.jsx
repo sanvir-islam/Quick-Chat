@@ -103,7 +103,7 @@ function Registration() {
           password: "",
         });
 
-        toast.success("Successfully signed u p and logged in!");
+        toast.success("Successfully signed up!");
         setTimeout(() => {
           navigate("/emailverification");
         }, 1000);

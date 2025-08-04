@@ -1,0 +1,22 @@
+.scrollbar-custom {
+  width: 100%; /* Or set your desired width */
+  /* overflow-y: scroll;*/
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+/* Customize the scrollbar track (the background of the scrollbar) */
+.scrollbar-custom::-webkit-scrollbar {
+  width: 3px; /* Width of the scrollbar */
+}
+
+/* Customize the scrollbar thumb (the draggable part) */
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background-color: rgba(211, 211, 211, 0.2); /* Thumb color */
+  border-radius: 10px; /* Optional for rounded edges */
+}
+
+/* Remove arrows at the ends of the scrollbar */
+.scrollbar-custom::-webkit-scrollbar-button {
+  display: none;
+}

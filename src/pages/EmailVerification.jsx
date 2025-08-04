@@ -55,7 +55,6 @@ const EmailVerification = () => {
       const interval = setInterval(async () => {
         await userInfo.reload();
         if (userInfo.emailVerified) {
-          // dispatch(setUserInfo(userInfo));
           clearInterval(interval);
           navigate("/home");
         }
@@ -66,8 +65,8 @@ const EmailVerification = () => {
     try {
       await logoutUser();
       dispatch(logout()); //clear the store
-      toast.success("Logged out successfully.");
       navigate("/login");
+      toast.success("Logged out successfully.");
     } catch (error) {
       toast.error(error.message);
     }

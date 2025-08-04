@@ -4,7 +4,7 @@ import "../customScrollBar.css";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { readDataObserver, removeData } from "../../firebase/services/dbService";
-import "./BellShake.css";
+import "./bellShake.css";
 import { ImCross } from "react-icons/im";
 import { PiCheckFatFill } from "react-icons/pi";
 import { MdOutlineNotificationsOff } from "react-icons/md";
@@ -19,24 +19,20 @@ function MyGroups() {
   useEffect(() => {
     if (!userInfo) return;
 
-    const unsubscribe = readDataObserver("groups/", (data) => {
+    const unsubscribeGroupDataFetch = readDataObserver("groups/", (data) => {
       const arr = data.filter((groupData) => groupData.adminid === userInfo.uid);
       setMyGroupList(arr);
     });
 
-    return () => unsubscribe();
-  }, []);
-
-  //checking group join req
-  useEffect(() => {
-    if (!userInfo) return;
-
-    const unsubscribe = readDataObserver(`groupJoinRequest/`, (data) => {
+    const unsubscribeGroupReqDataFetch = readDataObserver(`groupJoinRequest/`, (data) => {
       const arr = data.filter((req) => req.reciverid === userInfo.uid);
       setMyGroupJoinReqList(arr);
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribeGroupDataFetch();
+      unsubscribeGroupReqDataFetch();
+    };
   }, []);
 
   async function handleGroupJoinRequestRemove(reqId) {
@@ -99,10 +95,10 @@ function MyGroups() {
                 </div>
                 <div className="flex justify-between gap-4 align-middle">
                   <button onClick={() => handleGroupJoinRequestRemove(groupJoinReq.id)}>
-                    <ImCross size={25} className="text-red-600/60" />
+                    <ImCross size={22} className="text-red-600/60" />
                   </button>
                   <button onClick={() => handleGroupJoinRequestAccept(groupJoinReq.id)}>
-                    <PiCheckFatFill size={35} className="text-green-600/60" />
+                    <PiCheckFatFill size={31} className="text-green-600/60" />
                   </button>
                 </div>
                 <hr className="absolute left-0 bottom-[-13px] text-black/10 w-[371px] h-[2px] ml-[6px]" />
@@ -112,7 +108,7 @@ function MyGroups() {
         </div>
       ) : (
         <div className=" h-[320px] w-[344px] pr-[15px] scrollbar-custom ">
-          {/* user */}
+          {/* group */}
           {myGroupList.map((group) => (
             <div className="relative flex justify-between align-middle mb-[32px] " key={group.id}>
               <div className="flex justify-between align-middle">
@@ -121,11 +117,14 @@ function MyGroups() {
                 </div>
                 <div className="flex flex-col justify-center align-middle  ml-[11px]">
                   <h3 className="font-primary font-semibold text-primary text-[14px] ">{group.grouptitle}</h3>
-                  <p className="font-primary font-medium text-[12px] text-[#4d4d4d]/75">{group.groupbio}</p>
+                  <p className="font-primary font-medium text-[12px] text-[#4d4d4d]/75">
+                    <span className="text-primary/80 font-bold pr-1">Description: </span>
+                    {group.groupbio}
+                  </p>
                 </div>
               </div>
               <p className="font-primary font-medium text-[10px] text-black/50 mt-[10px]">today, 8:00am</p>
-              <hr className="absolute left-0 bottom-[-14px] text-black/10 w-[277px] h-[2px] ml-[6px]" />
+              <hr className="absolute left-0 bottom-[-14px] text-black/10 w-[290px] h-[2px] ml-[6px]" />
             </div>
           ))}
         </div>

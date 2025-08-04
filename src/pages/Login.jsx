@@ -105,9 +105,7 @@ function Login() {
     try {
       const user = await signInWithGoogle();
       await writeDataInDb(`users/${user.uid}`, { email: user.email, username: user.displayName, id: user.uid });
-
       dispatch(setUserInfo(user));
-
       toast.success("Successfully logged in!");
       setTimeout(() => {
         navigate("/home");

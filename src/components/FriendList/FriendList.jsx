@@ -16,11 +16,11 @@ function FriendList() {
   useEffect(() => {
     if (!userInfo) return;
 
-    const unsubscribe = readDataObserver(`friends/${userInfo.uid}`, (friend) => {
+    const unsubscribeFriendDataFetch = readDataObserver(`friends/${userInfo.uid}`, (friend) => {
       setFriendList(friend);
     });
 
-    return () => unsubscribe();
+    return () => unsubscribeFriendDataFetch();
   }, []);
 
   async function handleAddToBlocklist(friendId) {
@@ -53,7 +53,7 @@ function FriendList() {
   return (
     <div className="pl-[20px] pr-[15px] pb-[15px] pt-[19px] h-[451px] rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] w-full">
       {/* title */}
-      <div className="flex jus`tify-between align-middle mb-[30px]">
+      <div className="flex justify-between align-middle mb-[30px]">
         <h2 className="font-primary font-semibold text-[20px] text-primary">Friends</h2>
         <button>
           <BsThreeDotsVertical size={20} />
@@ -88,7 +88,7 @@ function FriendList() {
                 </button>
               </div>
 
-              <hr className="absolute left-0 bottom-[-14px] text-black/10 w-[277px] h-[2px] ml-[6px]" />
+              <hr className="absolute left-0 bottom-[-14px] text-black/10 w-[290px] h-[2px] ml-[6px]" />
             </div>
           );
         })}

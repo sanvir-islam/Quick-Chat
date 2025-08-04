@@ -14,12 +14,12 @@ function FriendRequest() {
   useEffect(() => {
     if (!userInfo) return;
 
-    const unsubscribe = readDataObserver("friendRequest/", (data) => {
+    const unsubscribeFriendReqDataFetch = readDataObserver("friendRequest/", (data) => {
       const arr = data.filter((friendReq) => userInfo.uid === friendReq.reciverid);
       setFriendRequestList(arr);
     });
 
-    return () => unsubscribe();
+    return () => unsubscribeFriendReqDataFetch();
   }, []);
 
   async function handleRequestAccept(requestId, requestSenderId) {

@@ -27,31 +27,26 @@ function GroupList() {
   useEffect(() => {
     if (!userInfo) return;
 
-    const unsubscribe = readDataObserver("groups/", (data) => {
+    const unsubscribeGroupDataFetch = readDataObserver("groups/", (data) => {
       const arr = data.filter((groupData) => groupData.adminid !== userInfo.uid);
       setGroupList(arr);
     });
 
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (!userInfo) return;
-
-    const unsubscribe = readDataObserver("groupJoinRequest/", (data) => {
+    const unsubscribeGroupJoinReqFetch = readDataObserver("groupJoinRequest/", (data) => {
       //checking am i the sender - data stored as reciverId + senderId
       const arr = [];
       data.forEach((groupData) => {
         const key = groupData.groupid + userInfo.uid;
-        if (groupData.id === key) {
-          arr.push(key);
-        }
+        if (groupData.id === key) arr.push(key);
       });
 
       setGroupReqIdList(arr);
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribeGroupDataFetch();
+      unsubscribeGroupJoinReqFetch();
+    };
   }, []);
 
   function handleInputChange(e, field) {
@@ -129,7 +124,7 @@ function GroupList() {
           </button>
         ) : (
           <button onClick={() => setShowGroupInput(true)}>
-            <BiSolidMessageSquareAdd size={30} />
+            <BiSolidMessageSquareAdd size={30} className="text-[#1E1E1E]" />
           </button>
         )}
       </div>
@@ -184,9 +179,9 @@ function GroupList() {
           </div>
         </div>
       ) : (
-        // users
+        // groups
         <div className=" h-[270px] w-[380px] pr-[18px] scrollbar-custom ">
-          {/* user */}
+          {/* group */}
           {groupList.map((group) => (
             <div className="relative flex justify-between align-middle mb-[28px] " key={group.id}>
               <div className="flex justify-between align-middle w-[280px]">
@@ -195,7 +190,10 @@ function GroupList() {
                 </div>
                 <div className="flex flex-col justify-center align-middle ml-[14px] overflow-x-hidden w-[200px] text-left">
                   <h3 className="font-primary font-semibold text-primary text-[18px] ">{group.grouptitle}</h3>
-                  <p className="font-primary font-medium text-[14px] text-[#4d4d4d]/75">{group.groupbio}</p>
+                  <p className="font-primary font-medium text-[14px] text-[#4d4d4d]/75">
+                    <span className="text-primary/80 font-bold pr-0.5">Description: </span>
+                    {group.groupbio}
+                  </p>
                 </div>
               </div>
               {groupReqIdList.includes(group.id + userInfo.uid) ? (
