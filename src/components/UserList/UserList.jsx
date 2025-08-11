@@ -125,7 +125,7 @@ function UserList() {
                 friendRequestKeyList.includes(userInfo.uid + user.id) ? (
                   //if i am the reciver
                   <button title="pending request">
-                    <TbBellQuestion size={26} className="text-yellow-500/90 cursor-not-allowed" />
+                    <TbBellQuestion size={25} className="text-red-500/60 cursor-not-allowed" />
                   </button>
                 ) : friendRequestKeyList.includes(user.id + userInfo.uid) ? (
                   // if i am the sender

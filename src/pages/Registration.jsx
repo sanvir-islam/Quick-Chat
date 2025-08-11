@@ -8,7 +8,9 @@ import { signUpUser } from "../firebase/services/authService";
 import { CircleLoader } from "react-spinners";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserInfo } from "../slice/userSlice";
-import { updateUserInfo, writeDataInDb } from "../firebase/services/dbService";
+import { writeDataInDb } from "../firebase/services/dbService";
+import { updateProfile } from "firebase/auth";
+import { auth } from "../firebase/firebase.config";
 
 function Registration() {
   const userInfo = useSelector((state) => state.user.value);
@@ -93,7 +95,8 @@ function Registration() {
       setIsLoading(true);
       try {
         const user = await signUpUser(registrationInfo.email, registrationInfo.password);
-        await updateUserInfo(registrationInfo.fullName);
+        await updateProfile(auth.currentUser, { displayName: registrationInfo.fullName });
+        // await updateUserInfo(registrationInfo.fullName);
         await writeDataInDb(`users/${user.uid}`, { email: user.email, username: user.displayName, id: user.uid });
         dispatch(setUserInfo(user));
         // clear input fields

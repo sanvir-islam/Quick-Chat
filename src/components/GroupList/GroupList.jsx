@@ -28,18 +28,16 @@ function GroupList() {
     if (!userInfo) return;
 
     const unsubscribeGroupDataFetch = readDataObserver("groups/", (data) => {
-      const arr = data.filter((groupData) => groupData.adminid !== userInfo.uid);
+      const arr = data.filter(
+        (groupData) => groupData.adminid !== userInfo.uid && !groupData.members.includes(userInfo.uid)
+      );
       setGroupList(arr);
     });
 
     const unsubscribeGroupJoinReqFetch = readDataObserver("groupJoinRequest/", (data) => {
-      //checking am i the sender - data stored as reciverId + senderId
-      const arr = [];
-      data.forEach((groupData) => {
-        const key = groupData.groupid + userInfo.uid;
-        if (groupData.id === key) arr.push(key);
+      const arr = data.map((groupReq) => {
+        if (groupReq.senderid === userInfo.uid) return groupReq.id;
       });
-
       setGroupReqIdList(arr);
     });
 
@@ -68,6 +66,7 @@ function GroupList() {
           adminid: userInfo.uid,
           grouptitle: groupInputInfo.groupTitle,
           groupbio: groupInputInfo.groupBio,
+          members: [userInfo.uid],
         });
 
         setTimeout(() => {
@@ -88,13 +87,11 @@ function GroupList() {
 
   async function handleGroupJoinRequest(group) {
     try {
-      //reciverId(groupId) + senderId
-      await writeDataInDb(`groupJoinRequest/${group.id + userInfo.uid}`, {
-        id: group.id + userInfo.uid,
+      await writeDataInDb(`groupJoinRequest/${group.id}`, {
+        id: group.id,
         sendername: userInfo.displayName,
         senderid: userInfo.uid,
         reciverid: group.adminid,
-        groupid: group.id,
         grouptitle: group.grouptitle,
         timestamp: Date.now(),
       });
@@ -102,10 +99,9 @@ function GroupList() {
       console.log(err.message);
     }
   }
-  async function handleGroupCancelRequest(group) {
+  async function handleGroupCancelRequest(groupId) {
     try {
-      //reciverId + senderId
-      await removeData(`groupJoinRequest/${group.id + userInfo.uid}`);
+      await removeData(`groupJoinRequest/${groupId}`);
     } catch (err) {
       console.log(err.message);
     }
@@ -196,10 +192,10 @@ function GroupList() {
                   </p>
                 </div>
               </div>
-              {groupReqIdList.includes(group.id + userInfo.uid) ? (
+              {groupReqIdList.includes(group.id) ? (
                 <button
                   className="mt-[16px] h-[35px] text-[17px] text-center font-primary rounded-[8px] font-semibold px-[12px] bg-red-500 hover:bg-red-600 text-white "
-                  onClick={() => handleGroupCancelRequest(group)}
+                  onClick={() => handleGroupCancelRequest(group.id)}
                 >
                   Cancel
                 </button>

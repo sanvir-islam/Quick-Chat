@@ -1,5 +1,6 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
 import profile from "../../assets/noProfilePic.png";
+import noRequest from "../../assets/noRequest.png";
 import "../customScrollBar.css";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -63,37 +64,44 @@ function FriendRequest() {
       {/* users */}
       <div className=" h-[390px] w-[427px] pr-[20px] scrollbar-custom ">
         {/* user */}
-        {friendRequestList.map((req) => {
-          return (
-            <div className="relative flex justify-between align-middle mb-[34px] " key={req.id}>
-              <div className="flex justify-between align-middle">
-                <div className="w-[70px] h-[70px]">
-                  <img src={profile} alt="userPorfile pic" className="w-full h-full object-cover rounded-[50%]" />
+
+        {friendRequestList.length === 0 ? (
+          <div className="w-[280px] h-[400px] p-4 mx-auto opacity-50">
+            <img src={noRequest} alt="userPorfile pic" className="w-full h-full object-cover rounded-[50%]" />
+          </div>
+        ) : (
+          friendRequestList.map((req) => {
+            return (
+              <div className="relative flex justify-between align-middle mb-[34px] " key={req.id}>
+                <div className="flex justify-between align-middle">
+                  <div className="w-[70px] h-[70px]">
+                    <img src={profile} alt="userPorfile pic" className="w-full h-full object-cover rounded-[50%]" />
+                  </div>
+                  <div className="flex flex-col justify-center align-middle ml-[14px]">
+                    <h3 className="font-primary font-semibold text-primary text-[18px] ">{req.sendername}</h3>
+                    <p className="font-primary font-medium text-[12px] text-[#4d4d4d]/75">
+                      send at{" "}
+                      {new Date(req.timestamp).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                      })}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex flex-col justify-center align-middle ml-[14px]">
-                  <h3 className="font-primary font-semibold text-primary text-[18px] ">{req.sendername}</h3>
-                  <p className="font-primary font-medium text-[12px] text-[#4d4d4d]/75">
-                    send at{" "}
-                    {new Date(req.timestamp).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: true,
-                    })}
-                  </p>
+                <div className="flex justify-between gap-4 align-middle">
+                  <button onClick={() => handleRequestRemove(req.id)}>
+                    <ImCross size={25} className="text-red-600/60" />
+                  </button>
+                  <button onClick={() => handleRequestAccept(req.id, req.senderid)}>
+                    <PiCheckFatFill size={35} className="text-green-600/60" />
+                  </button>
                 </div>
+                <hr className="absolute left-0 bottom-[-13px] text-black/10 w-[371px] h-[2px] ml-[6px]" />
               </div>
-              <div className="flex justify-between gap-4 align-middle">
-                <button onClick={() => handleRequestRemove(req.id)}>
-                  <ImCross size={25} className="text-red-600/60" />
-                </button>
-                <button onClick={() => handleRequestAccept(req.id, req.senderid)}>
-                  <PiCheckFatFill size={35} className="text-green-600/60" />
-                </button>
-              </div>
-              <hr className="absolute left-0 bottom-[-13px] text-black/10 w-[371px] h-[2px] ml-[6px]" />
-            </div>
-          );
-        })}
+            );
+          })
+        )}
       </div>
     </div>
   );

@@ -28,7 +28,7 @@ function ChatList() {
     const unsubscribeGroupDataFetch = readDataObserver("groups/", (data) => {
       const arr = [];
       data.forEach((groupData) => {
-        if (groupData.adminid === userInfo.uid) {
+        if (groupData.adminid === userInfo.uid || groupData.members.includes(userInfo.uid)) {
           arr.push({ ...groupData, tag: "group", name: groupData.grouptitle });
         }
       });
@@ -57,12 +57,13 @@ function ChatList() {
 
     setSearchResult([...result]);
   }
-  function handleMessage(chat) {
-    // id => reciver + sernder
+  function handleMessage(activeChatData) {
+    // friend => reciver + sernder
+    // group => groupID + userID
     const newChat = {
-      ...chat,
-      id: chat.tag === "friend" ? chat.id + userInfo.uid : chat.adminid + userInfo.uid,
-      reciverid: chat.tag === "friend" ? chat.id : chat.adminid,
+      ...activeChatData,
+      id: activeChatData.tag === "friend" ? [activeChatData.id, userInfo.uid].sort().join("_") : activeChatData.id,
+      reciverid: activeChatData.id,
       senderid: userInfo.uid,
     };
 
@@ -86,12 +87,12 @@ function ChatList() {
       {/* users */}
       <div className="relative w-[344px] h-full pr-[10px] scrollbar-custom pb-6">
         {/* user */}
-        {(searchResult.length > 0 ? searchResult : [...friendList, ...groupList]).map((chat) => {
+        {(searchResult.length > 0 ? searchResult : [...friendList, ...groupList]).map((activeChat) => {
           return (
             <div
               className="relative flex justify-between align-middle mb-[32px] pr-[10px] cursor-pointer group "
-              key={chat.id}
-              onClick={() => handleMessage(chat)}
+              key={activeChat.id}
+              onClick={() => handleMessage(activeChat)}
             >
               <div className="flex justify-between align-middle">
                 <div className="w-[54px] h-[54px]">
@@ -99,22 +100,22 @@ function ChatList() {
                 </div>
                 <div className="flex flex-col justify-center align-middle  ml-[11px]">
                   <h3 className="font-primary font-semibold text-primary text-[14px] ">
-                    {chat.username ? chat.username : chat.grouptitle}
+                    {activeChat.username ? activeChat.username : activeChat.grouptitle}
                   </h3>
                   <p className="font-primary font-medium text-[12px] text-[#4d4d4d]/75">
-                    {chat.email ? "" : <span className="text-primary/80 font-bold pr-1">Description: </span>}
-                    {chat.email ? chat.email : `${chat.groupbio}`}
+                    {activeChat.email ? "" : <span className="text-primary/80 font-bold pr-1">Description: </span>}
+                    {activeChat.email ? activeChat.email : `${activeChat.groupbio}`}
                   </p>
                 </div>
               </div>
 
               <div className="flex justify-center align-middle gap-8 py-1 mt-[4px]">
                 <span
-                  className={` text-[11px] tracking-wider font-semibold h-[25px] ${
-                    chat.tag === "friend" ? "bg-green-100 text-green-600 " : "bg-yellow-200/60 text-yellow-600"
+                  className={` text-[11px] tracking-wider font-semibold h-[25px]  cursor-text ${
+                    activeChat.tag === "friend" ? "bg-green-100 text-green-600 " : "bg-yellow-200/60 text-yellow-600"
                   } px-3 py-1 rounded-[10px] mt-2.5`}
                 >
-                  {chat.tag}
+                  {activeChat.tag}
                 </span>
                 <button>
                   <TbMessageOff size={26} className="text-red-600/60" />

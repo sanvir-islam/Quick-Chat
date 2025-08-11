@@ -1,6 +1,5 @@
 import { get, off, onValue, push, ref, remove, set } from "firebase/database";
-import { auth, db } from "../firebase.config";
-import { updateProfile } from "firebase/auth";
+import { db } from "../firebase.config";
 
 export async function writeDataInDb(path, data) {
   try {
@@ -46,14 +45,6 @@ export function readDataObserver(path, callback) {
     else callback([]);
   });
   return () => off(dataRef, "value", listener);
-}
-
-export async function updateUserInfo(data) {
-  try {
-    await updateProfile(auth.currentUser, { displayName: data });
-  } catch (error) {
-    throw new Error(error.message);
-  }
 }
 
 export async function removeData(path) {
