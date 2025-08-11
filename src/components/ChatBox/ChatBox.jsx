@@ -7,11 +7,15 @@ import { FaPaperPlane } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import { readDataObserver, writeDataWithIdInDb } from "../../firebase/services/dbService";
+import { formatMessageTime } from "../../utils/timeFormatter";
+import { BsEmojiSmile } from "react-icons/bs";
+import EmojiPicker from "emoji-picker-react";
 
 function ChatBox() {
   const activeChat = useSelector((state) => state.activeChat.value);
   const [msgInput, setMsgInput] = useState("");
   const [chats, setChats] = useState([]);
+  const [emojiShow, setEmojiShow] = useState(false);
   const messageInputRef = useRef(null);
 
   useEffect(() => {
@@ -36,6 +40,9 @@ function ChatBox() {
     }
   }
 
+  function handleEmojiClick(event) {
+    setMsgInput((prev) => prev + event.emoji);
+  }
   return (
     <div className="flex flex-col justify-between h-full pb-[34px] rounded-r-[20px] pl-[50px] pr-[14px] rounded-l-0 shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] w-full border-l-1 border-primary/10 pt-[24px]">
       <div className="relative flex justify-between align-middle pr-[26px]">
@@ -54,12 +61,11 @@ function ChatBox() {
         <div className="absolute left-0 bottom-[-25px] bg-black/10 w-[592px] h-[2px] "></div>
       </div>
 
-      <div className="relative h-full mt-26 ">
+      <div className="relative h-full mt-26 " onClick={() => emojiShow && setEmojiShow(false)}>
         {/* messages  */}
         <div className="absolute right-0 bottom-20 scrollbar-custom h-full pl-3 pr-[15px] ">
           {chats.length > 0 &&
             chats.map((chat) => {
-              console.log(chat.senderid === activeChat.senderid);
               if (chat.senderid === activeChat.reciverid) {
                 //left
                 return (
@@ -71,7 +77,7 @@ function ChatBox() {
                       </div>
                     </div>
                     <p className="font-secondary text-[12px] text-primary/25 font-medium pt-[7px] text-left">
-                      {chat.timestamp}
+                      {formatMessageTime(chat.timestamp)}
                     </p>
                   </div>
                 );
@@ -85,7 +91,7 @@ function ChatBox() {
                       </div>
                     </div>
                     <p className="font-secondary text-[12px] text-primary/25 font-medium pt-[7px] text-right">
-                      {chat.timestamp}
+                      {formatMessageTime(chat.timestamp)}
                     </p>
                   </div>
                 );
@@ -95,8 +101,15 @@ function ChatBox() {
 
         {/* input msg */}
         <div className="flex justify-between align-bottom w-[590px] absolute bottom-0 left-0 ">
-          <div className="w-[527px] h-[80px]">
+          <div className=" relative w-[527px] h-[80px]">
             <div className=" bg-black/10 w-[590px] h-[2px] mb-[35px]"></div>
+            {/* emoji picker */}
+            {emojiShow && (
+              <div className="absolute bottom-[60px] right-10">
+                <EmojiPicker onEmojiClick={handleEmojiClick} />
+              </div>
+            )}
+
             <textarea
               ref={messageInputRef}
               value={msgInput}
@@ -111,6 +124,12 @@ function ChatBox() {
               className="w-full h-[45px] text-[16px] px-4 py-2 resize-none border-none rounded-lg bg-[#f1f1f1] outline-none scrollbar-custom"
             ></textarea>
           </div>
+          <button className="absolute top-[47px] right-[90px]" onClick={() => setEmojiShow(!emojiShow)}>
+            <BsEmojiSmile
+              className="text-primary/60 hover:bg-black hover:text-white rounded-full hover:border-0 transition-all duration-200"
+              size={26}
+            />
+          </button>
           <button className=" bg-primary w-[45px] h-[45px] rounded-[10px] mt-9" onClick={sendMessage}>
             <FaPaperPlane size={16} className="text-white m-auto " />
           </button>
